@@ -1,13 +1,16 @@
-import { Pool } from '@neondatabase/serverless';
-import { Inject, Injectable } from '@nestjs/common';
-import { User } from './interfaces/users.interface';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Users } from './users.entity';
 
 @Injectable()
 export class UsersService {
-  constructor(@Inject('POSTGRES_POOL') private readonly sql: Pool) {}
+  constructor(
+    @InjectRepository(Users)
+    private usersRepository: Repository<Users>,
+  ) {}
 
-  async findAllUser(): Promise<User[]> {
-    const data = await this.sql.query('SELECT * FROM users');
-    return data.rows as User[];
+  async findAllUser(): Promise<Users[]> {
+    return this.usersRepository.find();
   }
 }
