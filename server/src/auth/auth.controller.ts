@@ -1,4 +1,28 @@
-import { Controller } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  HttpCode,
+  HttpStatus,
+  Post,
+  Request,
+} from '@nestjs/common';
+import { AuthService } from './auth.service';
+import { SignInDto } from './dto/signInDto';
+import { JwtPayload } from './interfaces/JWTUser';
 
 @Controller('auth')
-export class AuthController {}
+export class AuthController {
+  constructor(private authService: AuthService) {}
+
+  @HttpCode(HttpStatus.OK)
+  @Post('login')
+  signIn(@Body() signInDto: SignInDto) {
+    return this.authService.signIn(signInDto.userName, signInDto.password);
+  }
+
+  @Get('profile')
+  getProfile(@Request() req: { user: JwtPayload }): JwtPayload {
+    return req.user;
+  }
+}

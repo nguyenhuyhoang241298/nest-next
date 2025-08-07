@@ -13,4 +13,7 @@ export class Users {
 
   @Column()
   age: number;
+
+  @Column()
+  password: string;
 }

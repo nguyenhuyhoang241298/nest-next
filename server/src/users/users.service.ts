@@ -13,4 +13,12 @@ export class UsersService {
   async findAllUser(): Promise<Users[]> {
     return this.usersRepository.find();
   }
+
+  async findOneUser(id: number): Promise<Users | null> {
+    return this.usersRepository.findOneBy({ id });
+  }
+
+  async findByName(name: string): Promise<Users | null> {
+    return this.usersRepository.findOneBy({ name });
+  }
 }
