@@ -22,7 +22,7 @@ const DeleteDialog = () => {
   const mutation = useMutation({
     mutationFn: (id: number) => deleteUser(id),
     onSuccess: (data: any) => {
-      if (data.error) {
+      if (data?.error) {
         toast.error(`Failed to delete user: ${data.message}`)
         return
       }
