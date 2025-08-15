@@ -1,5 +1,4 @@
-export interface User {
-  id: number;
+export class UserDto {
   email: string;
   name: string;
   age: number;
