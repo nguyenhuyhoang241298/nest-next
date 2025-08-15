@@ -72,7 +72,7 @@ const CreateDialog = () => {
   const mutation = useMutation({
     mutationFn: (user: z.infer<typeof formSchema>) => createUser(user),
     onSuccess: (data: any) => {
-      if (data.error) {
+      if (data?.error) {
         toast.error(`Failed to create user: ${data.message}`)
         return
       }
