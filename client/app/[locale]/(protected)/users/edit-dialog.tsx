@@ -41,12 +41,15 @@ const formSchema = z.object({
     .string()
     .email({ message: 'Invalid email address' })
     .max(255, { message: 'Email must be less than 255 characters' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters long' })
+    .max(255, { message: 'Password must be less than 255 characters' }),
 })
 
 const EditDialog = () => {
   const queryClient = useQueryClient()
   const { openEdit, setOpenEdit, user } = useUserModalStore()
-  console.log('user', user)
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
@@ -54,13 +57,14 @@ const EditDialog = () => {
       name: user?.name || '',
       age: user?.age || undefined,
       email: user?.email || '',
+      password: user?.password || '',
     },
   })
 
   const mutation = useMutation({
     mutationFn: (user: User) => updateUser(user),
     onSuccess: (data: any) => {
-      if (data.code) {
+      if (data.error) {
         toast.error(`Failed to update user: ${data.message}`)
         return
       }
@@ -90,6 +94,7 @@ const EditDialog = () => {
       name: user?.name || '',
       age: user?.age || undefined,
       email: user?.email || '',
+      password: user?.password || '',
     })
   }, [user, form])
 
@@ -144,6 +149,21 @@ const EditDialog = () => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your email" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your password" {...field} />
                   </FormControl>
 
                   <FormMessage />

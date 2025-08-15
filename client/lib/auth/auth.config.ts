@@ -1,7 +1,7 @@
 import { CredentialsSignin, type NextAuthConfig } from 'next-auth'
 import Credentials from 'next-auth/providers/credentials'
 
-import { getUserByEmailAndPassword } from './api'
+import { loginApi } from './api'
 
 class InvalidLoginError extends CredentialsSignin {
   constructor(code: string) {
@@ -14,15 +14,15 @@ export default {
   providers: [
     Credentials({
       credentials: {
-        email: {},
+        username: {},
         password: {},
       },
       authorize: async (credentials) => {
         try {
           let user = null
 
-          user = await getUserByEmailAndPassword(
-            credentials.email as string,
+          user = await loginApi(
+            credentials.username as string,
             credentials.password as string,
           )
 
@@ -34,4 +34,5 @@ export default {
       },
     }),
   ],
+  trustHost: true,
 } satisfies NextAuthConfig

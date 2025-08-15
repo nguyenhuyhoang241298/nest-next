@@ -20,7 +20,7 @@ import { toast } from 'sonner'
 import { z } from 'zod'
 
 export const signInSchema = z.object({
-  email: z.string().email({ message: 'Email không hợp lệ' }),
+  username: z.string().min(1, { message: 'Tên đăng nhập bắt buộc' }),
   password: z.string().min(1, { message: 'Vui lòng nhập mật khẩu' }),
 })
 
@@ -35,7 +35,7 @@ export function LoginForm({
   const form = useForm<FormData>({
     resolver: zodResolver(signInSchema),
     defaultValues: {
-      email: '',
+      username: '',
       password: '',
     },
   })
@@ -70,18 +70,18 @@ export function LoginForm({
         <div className="flex flex-col items-center gap-2 text-center">
           <h1 className="text-2xl font-bold">Đăng nhập vào tài khoản</h1>
           <p className="text-balance text-sm text-muted-foreground">
-            Nhập email và mật khẩu của bạn để tiếp tục
+            Nhập tên đăng nhập và mật khẩu của bạn để tiếp tục
           </p>
         </div>
 
         <FormField
           control={form.control}
-          name="email"
+          name="username"
           render={({ field }) => (
             <FormItem>
-              <FormLabel>Email</FormLabel>
+              <FormLabel>Tên đăng nhập</FormLabel>
               <FormControl>
-                <Input placeholder="admin@goonus.io" {...field} />
+                <Input placeholder="admin" {...field} />
               </FormControl>
               <FormMessage />
             </FormItem>
