@@ -3,14 +3,14 @@ import { User } from './type'
 
 export const getUsers = async () => {
   const res = await fetcher({
-    path: '/api/users',
+    path: 'users',
   })
   return res.json() as Promise<User[]>
 }
 
 export const createUser = async (user: Omit<User, 'id'>) => {
   const res = await fetcher({
-    path: '/api/users',
+    path: 'users',
     method: 'POST',
     body: user,
   })
@@ -19,8 +19,8 @@ export const createUser = async (user: Omit<User, 'id'>) => {
 
 export const updateUser = async (user: User) => {
   const res = await fetcher({
-    path: `/api/users/${user.id}`,
-    method: 'PATCH',
+    path: `users/${user.id}`,
+    method: 'PUT',
     body: user,
   })
   return res.json() as Promise<User>
@@ -28,7 +28,7 @@ export const updateUser = async (user: User) => {
 
 export const deleteUser = async (id: number) => {
   const res = await fetcher({
-    path: `/api/users/${id}`,
+    path: `users/${id}`,
     method: 'DELETE',
   })
   return res.json() as Promise<void>

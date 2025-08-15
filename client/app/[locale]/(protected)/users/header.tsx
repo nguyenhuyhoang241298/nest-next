@@ -49,6 +49,10 @@ const formSchema = z.object({
     .string()
     .email({ message: 'Invalid email address' })
     .max(255, { message: 'Email must be less than 255 characters' }),
+  password: z
+    .string()
+    .min(8, { message: 'Password must be at least 8 characters long' })
+    .max(255, { message: 'Password must be less than 255 characters' }),
 })
 
 const CreateDialog = () => {
@@ -61,13 +65,14 @@ const CreateDialog = () => {
       name: '',
       age: undefined,
       email: '',
+      password: '',
     },
   })
 
   const mutation = useMutation({
     mutationFn: (user: z.infer<typeof formSchema>) => createUser(user),
     onSuccess: (data: any) => {
-      if (data.code) {
+      if (data.error) {
         toast.error(`Failed to create user: ${data.message}`)
         return
       }
@@ -142,6 +147,21 @@ const CreateDialog = () => {
                   <FormLabel>Email</FormLabel>
                   <FormControl>
                     <Input placeholder="Enter your email" {...field} />
+                  </FormControl>
+
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            <FormField
+              control={form.control}
+              name="password"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Password</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Enter your password" {...field} />
                   </FormControl>
 
                   <FormMessage />

@@ -1,18 +1,37 @@
-import { sleep } from '../utils'
-import { FAKE_ADMIN } from './configs'
+'use server'
 
-export const getUserByEmailAndPassword = async (
-  email: string,
+import { env } from '@/env'
+import { User } from 'next-auth'
+import { LoginResultSchema } from './type'
+
+export const loginApi = async (
+  userName: string,
   password: string,
-) => {
-  await sleep(1500)
+): Promise<User | null> => {
+  const loginUrl = env.NEXT_PUBLIC_API_ENDPOINT + '/auth/login'
 
-  if (email === FAKE_ADMIN.email && password === FAKE_ADMIN.password) {
-    return {
-      email: FAKE_ADMIN.email,
-      accessToken: 'ACCESS_TOKEN',
-    }
+  const res = await fetch(loginUrl, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+    body: JSON.stringify({ username: userName, password }),
+  })
+
+  if (!res.ok) return null
+
+  const data = await res.json()
+
+  const parsed = LoginResultSchema.safeParse(data)
+
+  if (!parsed.success) {
+    console.error('Login error:', parsed.error)
+    return null
   }
 
-  return null
+  return {
+    id: String(parsed.data.id),
+    name: parsed.data.name,
+    accessToken: parsed.data.access_token,
+  }
 }
